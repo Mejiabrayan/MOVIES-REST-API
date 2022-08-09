@@ -1,0 +1,29 @@
+{
+  "name": "mymovie_api",
+  "version": "1.0.0",
+  "description": "This is an REST API for an application called “myMovies” that interacts with a database that stores data about different movies. User's will be able to search and access all of their favorite movies, genre of movies, directors including being able to sign up, update their personal inforamtion, and create a list of their favorites movie.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mejiabrayan/myMovies.git"
+  },
+  "keywords": [],
+  "author": "Brayan Mejia Cuenca",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mejiabrayan/myMovies/issues"
+  },
+  "homepage": "https://github.com/Mejiabrayan/myMovies#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.21.0"
+  }
+}
