@@ -2,19 +2,374 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Documentation</title>
+    <title>Documentation</title>
   </head>
   <body>
-    <h1>API Documentation</h1>
+    <h1>myMovies Document</h1>
+
     <p>
-      This is an REST API for an application called “myFlix” that interacts with a database
-      that stores data about different movies.
+      This is an REST API for an application called “myMovies” that interacts
+      with a database that stores data about different movies.
       <br />
       User's will be able to search and access all of their favorite movies,
       genre of movies, directors including being able to sign up, update their
       personal inforamtion, and create a list of their favorites movie.
     </p>
+
+    <div class="adding_users">
+      <h2>Adding Users</h2>
+      <h3 class="url">/users</h3>
+      <h4>Method Type: POST</h4>
+      <p>
+        <strong>Description:</strong>This endpoint allows users to register.
+        Endpoint returns a JSON object with few key values. For key "name" it
+        returns string,for "favorite movies" array, and for an "id" string.
+      </p>
+      <p><strong>Query Parameters:</strong> None</p>
+      <p>
+        <strong>Expected request data:</strong> JSON object with data about
+        user. <span class="required">Required</span>: "name"
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        {<br />
+        "Name": "Brayan Mejia",<br />
+        }
+      </code>
+      <p>
+        <strong>Expected response data:</strong> JSON object with data about
+        user which includes automatic generated ID
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        {<br />
+        "Name": "Brayan Mejia",<br />
+        "Email": "Brayan Mejia@email.com," <br />
+        "Password": "password123," <br />
+        "Favorite Movies": [],<br />
+        "id": "8a757bb9-2eec-46bf-86f0-443ff742cf3a"<br />
+        }
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>201: Created- New user has been added</p>
+      <p>400: Bad request- User already exists</p>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="updating_users">
+      <h2>Updating Usernames</h2>
+      <h3 class="url">/users/:id</h3>
+      <h4>Method Type: POST</h4>
+      <p>
+        <strong>Description:</strong> This endpoint allows users to update their
+        username. Endpoint returns a JSON object with few key values. For key
+        "name" it returns string, for "favorite movies" array, and for an "id"
+        integer.
+      </p>
+      <p><strong>Query Parameters:</strong> :id,</p>
+      <p>
+        <strong>Expected request data:</strong> JSON object with data about
+        user.
+      </p>
+      <p><strong>Required</strong>: :id</p>
+      <h4>Example:</h4>
+      <p>localhost:8080/users/1</p>
+      <br />
+      <code class="code">
+        {<br />
+        "Username": "newUsername"<br />
+        }
+      </code>
+      <p>
+        <strong>Expected response data:</strong> JSON object with data about
+        user which includes,"id" with integer value, "Name", and "favorite
+        movies" with an array.
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        {<br />
+        "Name": "Brayan Mejia",<br />
+        "Email": "Brayan Mejia@email.com", <br />
+        "Password": "password123", <br />
+        "FavoriteMovies": [],<br />
+        "id": 8a757bb9-2eec-46bf-86f0-443ff742cf3a,<br />
+        }
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>200: OK- New user has been added</p>
+      <p>500: Internal server error- Something went wrong</p>
+    </div>
+    <br />
+    <br />
+
+    <div class="add_movie_to_faves">
+      <h2>Adding a Movie to Favorites</h2>
+      <h3 class="url">/users/:id/movieTitle</h3>
+      <h4>Method Type: POST</h4>
+      <p>
+        <strong>Description:</strong>This endpoint allows users to add movie to
+        their favorite list.Endpoint returns an JSON object with users data
+        including updated favorite movies array.
+      </p>
+      <p><strong>Query Parameters:</strong> :id, :movieTitle</p>
+      <p><strong>Expected request data:</strong> Required: :id, :movieTitle</p>
+      <h4>Example:</h4>
+      <p>localhost:8080/users/1/movies/New%20Movie</p>
+      <p>
+        <strong>Expected response data:</strong> JSON object with updated list
+        of movies in Favorite Movies array.
+      </p>
+      <code class="code">
+        { The Batman has been added to user's movies list }
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>200: OK- Updated users array list</p>
+      <p>500: Internal server error- Something went wrong</p>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="get_movies">
+      <h2>Get Movie List</h2>
+      <h3 class="url">/movies</h3>
+      <h4>Method Type: GET</h4>
+      <p>
+        <strong>Description:</strong> This endpoint allows users to get whole
+        list of movies. Endpoint returns an array with list of objects. Each
+        object contains data about movies.
+      </p>
+      <p><strong>Query Parameters:</strong> None</p>
+      <p><strong>Expected request data:</strong>Required: /movies</p>
+      <h4>Example:</h4>
+      <p>localhost:8080/movies</p>
+      <p>
+        <strong>Expected response data:</strong> An array with list of movies.
+        Each object contains data about movies. Every key is described with
+        value of a string.
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        [<br />
+        {<br />
+        "Title":"The Batman",<br />
+        "Description": "When a sadistic serial killer begins murdering key
+        political figures in Gotham, Batman is forced to investigate the city's
+        hidden corruption and question his family's involvement." <br />
+        "Genre": { <br />
+        "Name":"Action",<br />
+        "Description": "An action story is similar to adventure, and the
+        protagonist usually takes a risky turn, which leads to desperate
+        situations (including explosions, fight scenes, daring escapes, etc.).
+        Action and adventure are usually categorized together (sometimes even as
+        \"action-adventure\") because they have much in common, and many stories
+        fall under both genres simultaneously (for instance, the James Bond
+        series can be classified as both)"<br />
+        }, <br />
+        "Director": { <br />
+        "Name":"Matt Reeves"", <br />
+        "Bio":" "Matthew George \"Matt\" Reeves was born April 27, 1966 in
+        Rockville Center, New York, USA and is a writer, director and producer.
+        Reeves began making movies at age eight, directing friends and using a
+        wind-up camera. He befriended filmmaker J.J. Abrams when both were 13
+        years old and a public-access television cable channel, Z Channel, aired
+        their short films. When Reeves and Abrams were 15 or 16 years old,
+        Steven Spielberg hired them to transfer some of his own Super 8 films to
+        videotape." <br />, "Birth": "August 16, 1954" }, <br />
+        "ImageURL":
+        "https://images-na.ssl-images-amazon.com/images/I/51C49vnkOSL._SX300_SY300_QL70_FMwebp_.jpg",
+        <br />
+        "Featured: false <br />
+        },
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>200: OK</p>
+      <p>500: Internal server error- Something went wrong</p>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="search_movies">
+      <h2>Search Movies by Title</h2>
+      <h3 class="url">/movies/:movieTitle</h3>
+      <h4>Method Type: GET</h4>
+      <p>
+        <strong>Description:</strong> This endpoint allows users to search a
+        movie by title. Endpoint returns an object with data about specific
+        movie.
+      </p>
+      <p><strong>Query Parameters:</strong> :movieTitle</p>
+      <p><strong>Expected request data:</strong> Required: :movieTitle</p>
+      <h4>Example:</h4>
+      <p>localhost:8080/movies/The%20Batman</p>
+      <p>
+        <strong>Expected response data:</strong> An object containing data about
+        specific movie. Every key is described with value of a string.
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        { <br />
+        "Title":"The Batman", <br />
+        "Description":"At the end of his career, a clueless fashion model is
+        brainwashed to kill the Prime Minister of Malaysia.", <br />
+        "Genre": { <br />
+        "Name":"Action", <br />
+        "Description":"A film or television programme which blends comedy with a
+        lively plot and fast-paced action." <br />
+        }, <br />
+        "Director": { <br />
+        "Name":"Ben Stiller", <br />
+        "Bio":"Benjamin Edward Meara Stiller (born November 30, 1965) is an
+        American actor, comedian, producer, director, and screenwriter. He is
+        the son of the comedians and actors Jerry Stiller and Anne Meara."
+        <br />
+        "Birth": "August 16, 1954 " }, <br />
+        "ImageURL":"https://images-na.ssl-images-amazon.com/images/I/51C49vnkOSL._SX300_SY300_QL70_FMwebp_.jpg",
+        <br />
+        "Featured":false<br />
+        }, <br />
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>201: OK- JSON object</p>
+      <p>500: Internal server error- Something went wrong</p>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="find_genre">
+      <h2>Get a Genre</h2>
+      <h3 class="url">/movies/genre/:genreName</h3>
+      <h4>Method Type: GET</h4>
+      <p>
+        <strong>Description:</strong> This endpoint allows users to search for a
+        genre. Endpoint returns an object with data about specific genre.
+      </p>
+      <p><strong>Query Parameters:</strong> :genreName</p>
+      <p><strong>Expected request data:</strong> Required: :genreName</p>
+      <h4>Example:</h4>
+      <p>localhost:8080/movies/genre/Drama</p>
+      <p>
+        <strong>Expected response data:</strong> An object containing data about
+        specific genre. Every key is described with value of a string.
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        { <br />
+        "Name":"Drama",<br />
+        "Description":"Within film, television, and radio (but not theatre),
+        drama is a genre of narrative fiction (or semi-fiction) intended to be
+        more serious than humorous in tone,[25] focusing on in-depth development
+        of realistic characters who must deal with realistic emotional
+        struggles. A drama is commonly considered the opposite of a comedy, but
+        may also be considered separate from other works of some broad genre,
+        such as a fantasy."<br />
+        },
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>200: OK- JSON object</p>
+      <p>400: Bad request- Genre not found!</p>
+      <p>500: Internal server error- Something went wrong</p>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="get_director">
+      <h2>Find a Director</h2>
+      <h3 class="url">/movies/directors/:directorName</h3>
+      <h4>Method Type: GET</h4>
+      <p>
+        <strong>Description:</strong> This endpoint allows users to search for a
+        specific directors.Endpoint returns an object with data about specific
+        director.
+      </p>
+      <p><strong>Query Parameters:</strong> :directorName</p>
+      <p><strong>Expected request data:</strong> Required: :directorName</p>
+      <h4>Example:</h4>
+      <p>http://localhost:8080/movies/directors/Joseph%20Kosinski</p>
+      <p>
+        <strong>Expected response data:</strong> An object containing data about
+        specific director. Every key is described with value of a string.
+      </p>
+      <h4>Example:</h4>
+      <code class="code">
+        {<br />
+        "Name":"Joseph Kosinski" <br />
+        "Bio":"Joseph Kosinski is a director whose uncompromising style has
+        quickly made a mark in the filmmaking zeitgeist. His feature film debut,
+        \"Tron: Legacy\" for Walt Disney Studios, grossed over $400 million
+        worldwide and was nominated for several awards, including an Academy
+        Award for Sound Editing and a Grammy for the score by Daft Punk.",
+        <br />
+        },
+      </code>
+      <p><strong>Response status codes:</strong></p>
+      <p>200: OK- JSON object</p>
+      <p>400: Bad request- Director not found!</p>
+      <p>500: Internal server error- Something went wrong</p>
+    </div>
   </body>
 </html>
+
+<br />
+<br />
+
+<div class="remove_movies_from_faves">
+  <h2>Removing a Movie from Favorites</h2>
+  <h3 class="url">/users/:id/:movieTitle</h3>
+  <h4>Method Type: DELETE</h4>
+  <p>
+    <strong>Description:</strong> This endpoint allows users to remove movie
+    from their list. Endpoint returns an JSON object with users data including
+    updated favorite movies array.
+  </p>
+  <p><strong>Query Parameters:</strong> :id, :movieTitle</p>
+  <p><strong>Expected request data:</strong> Required: /id, /movieTitle</p>
+  <h4>Example:</h4>
+  <p>http://localhost:8080/users/2/The%20Batman</p>
+  <p>
+    <strong>Expected response data:</strong> A message indicating the movie has
+    been added to the user's movie list.
+  </p>
+  <h4>Example:</h4>
+  <code class="code"> { The Batman has been removed from user: 2's Movies list } </code>
+  <p><strong>Response status codes:</strong></p>
+  <p>200: OK- Movie has been removed from users list!</p>
+  <p>500: Internal server error- Something went wrong</p>
+</div>
+
+<br />
+<br />
+
+<div class="deleting_users">
+  <h2>Deleting Users</h2>
+  <h3 class="url">/users/:id</h3>
+  <h4>Method Type: DELETE</h4>
+  <p>
+    <strong>Description:</strong> This endpoint allows users remove their
+    account by their Username.Endpoint returns a confirmation message that users
+    account has been deleted.
+  </p>
+  <p><strong>Query Parameters:</strong> :id,</p>
+  <p><strong>Expected request data:</strong> Required: :id</p>
+  <h4>Example:</h4>
+  <p>localhost:8080/users/1</p>
+  <p>
+    <strong>Expected response data:</strong> A confirmation message that users
+    account has been deleted.
+  </p>
+  <h4>Example:</h4>
+  <code class="code"> { "user 1 has been deleted" } </code>
+  <p><strong>Response status codes:</strong></p>
+  <div class="status_codes">
+    <p>200: OK- Users account has been deleted</p>
+    <p>400: Bad request- Users name was not found</p>
+    <p>500: Internal server error- Something went wrong</p>
+  </div>
+</div>
+<br />
+<br />
