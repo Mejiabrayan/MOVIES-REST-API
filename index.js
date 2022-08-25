@@ -13,10 +13,7 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-mongoose.connect('mongodb://localhost:27017/test);',
-    { userNewUrlParser: true, useUnifiedTopology: true }, () => {
-        console.log('connected to mongoDB');
-    });
+mongoose.connect('mongodb://localhost:27017/myMovies').catch(error => handleError(error) && console.log(error));
 
 
 
@@ -24,8 +21,10 @@ app.use(bodyParser.json());
 
 //log request to server
 app.use(morgan('common'))
+
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 
 // default text response
@@ -51,7 +50,7 @@ app.get('/users', (req, res) => {
 app.post('/users', (req, res) => {
     Users.findOne({ Username: req.body.Username }).then((user) => {
         if (user) {
-            return res.status(400).send(req.body.Username + 'already exists');
+            return res.status(400).send(req.body.Username + 'already exists!');
         } else {
             Users.create({
                 Username: req.body.Username,
@@ -69,6 +68,8 @@ app.post('/users', (req, res) => {
     });
 });
 
+
+// Get one user by username
 
 app.delete('/users/:Username', (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username }).then((user) => {
@@ -95,7 +96,7 @@ app.get('/users/:Username', (req, res) => {
 });
 
 // UPDATE: change user's username
-app.put('/user/:Username', (req, res) => {
+app.put('/users/:Username', (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username },
         {
             $set: {
@@ -112,7 +113,8 @@ app.put('/user/:Username', (req, res) => {
                 console.error(err);
                 res.status(500).send('Error: ' + err);
             } else {
-                res.json(updateUser)
+                res.json(updateUser); // Return the updated document
+
             }
         })
 });
@@ -136,12 +138,12 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
 });
 
 // DELETE: remove favorite movie from users
-app.delete('/users/:Username/movies/MovieID', (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
     Users.findOneAndDelete({ FavoriteMovies: req.params.MovieID }).then((movie) => {
         if (!movie) {
             res.status(400).send(req.params.MovieID + ' movie was not found!');
         } else {
-            res.status(201).send(req.params.MovieID + ' movie was sucessfully deleted');
+            res.status(201).send(req.params.MovieID + ' movie was successfully deleted!');
         }
     }).catch((err) => {
         console.error(err);
@@ -182,29 +184,31 @@ app.get('/directors', (req, res) => {
 })
 
 
-app.get('/director/:Name', (req, res) => {
+// GET: return director by name
+app.get('/directors/:Name', (req, res) => {
     Directors.findOne({ Name: req.params.Name }).then((director) => {
-        res.json(director)
+        res.json(director);
     }).catch((err) => {
         console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
-});
-
-// Genre
-
-// GET: returns all genres
-app.get('/genre', (req, res) => {
-    Genre.find().then((genre) => {
-        res.status(201).json(genre);
-    }).catch((err) => {
-        console.error(err);
-        res.status(400).send('Error: ' + err);
+        res.status(500).send('Error: ' + err);  // 500 is server error
     })
 })
 
+    /
+    // Genre
+
+    // GET: returns all genres
+    app.get('/genres', (req, res) => {
+        Genres.find().then((genre) => {
+            res.status(201).json(genre);
+        }).catch((err) => {
+            console.error(err);
+            res.status(400).send('Error: ' + err);
+        })
+    })
+
 // GET: returns Genre based on name
-app.get('/genre/:Name', (req, res) => {
+app.get('/genres/:Name', (req, res) => {
     Genres.findOne({ Name: req.params.Name }).then((genreName) => {
         res.status(201).json(genreName)
     }).catch((err) => {
