@@ -1,0 +1,42 @@
+const passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
+    Models = require('./models/models'),
+    passportJWT = require('passport-jwt');
+
+let Users = Models.User,
+    JWTStrategy = passportJWT.Strategy,
+    ExtractJWT = passportJWT.ExtractJwt;
+
+// Defined Strategy
+passport.use(new LocalStrategy({  // defines basic HTTP auth for login request
+    usernameField: 'Username',
+    passwordField: 'Password'
+}, (username, password, callback) => {
+    console.log(username + ' ' + password);
+    Users.findOne({ Username: username }, (error, user) => {
+        if (error) {
+            console.log(error);
+            return callback(error);
+        }
+
+        if (!user) {
+            console.log('incorrect username');
+            return callback(null, false, { message: 'Incorrect username or password' });
+        }
+        console.log('finished');
+        return callback(null, user)
+    });
+}));
+
+
+// Defined Strategy
+passport.use(new JWTStrategy({  // allows you to authenticate users based on the jwt submitted
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'your_jwt_secret'
+}, (jwtPayload, callback) => {
+    return Users.findById(jwtPayload._id).then((user) => {
+        return callback(null, user);
+    }).catch((error) => {
+        return callback(error)
+    });
+}));
