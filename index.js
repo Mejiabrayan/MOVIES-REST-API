@@ -30,7 +30,7 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-mongoose.connect('mongodb://localhost:27017/myMovies').catch(error => handleError(error) && console.log(error));
+mongoose.connect('mongodb://localhost:27017/myMovies').catch(error => handleError(error));
 
 
 
