@@ -1,11 +1,14 @@
-const express = require('express');
+const express = require('express')
 bodyParser = require('body-parser'),
     uuid = require('uuid');
 
 const morgan = require('morgan');
 const app = express();
 const mongoose = require('mongoose');
-const Models = require('./models/models.js');
+const Models = require('./models/models');
+
+const passport = require('passport');
+require('./passport')
 
 
 const Movies = Models.Movie;
@@ -26,6 +29,8 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.static('public'));
 
+let auth = require('./auth')(app);
+
 
 // default text response
 app.get("/", (req, res) => {
@@ -33,6 +38,20 @@ app.get("/", (req, res) => {
 })
 
 
+
+
+app.get('/movies', passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        Movies.find().then((movies) => {
+            res.status(201).json(movies);
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
+    });
+
+
+    
 // Users
 
 // Get all users
