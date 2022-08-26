@@ -10,6 +10,20 @@ const Models = require('./models/models');
 const passport = require('passport');
 require('./passport')
 
+const { check, validationResults } = require('express-validator');
+
+let allowedOrigins = ['http://localhost:8081', 'http://testsite.com'];
+const cors = require('cors');
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            let message = 'The CORS policy for this application \doesn\'t allow access from origin ' + origin;
+            return callback(new Error(message), false);
+        }
+        return callback(null, true);
+    }
+}));
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -51,10 +65,10 @@ app.get('/movies', passport.authenticate('jwt', { session: false }),
     });
 
 
-    
+
 // Users
 
-// Get all users
+// GET: returns all users
 app.get('/users', (req, res) => {
     Users.find()
         .then((allUsers) => {
@@ -65,30 +79,47 @@ app.get('/users', (req, res) => {
             res.status(500).send('Error: ' + err);
         });
 });
+
 // CREATE: add User to the database
-app.post('/users', (req, res) => {
-    Users.findOne({ Username: req.body.Username }).then((user) => {
-        if (user) {
-            return res.status(400).send(req.body.Username + 'already exists!');
-        } else {
-            Users.create({
-                Username: req.body.Username,
-                Password: req.body.Passsword,
-                Email: req.body.Email,
-                Birthday: req.body.Birthday
-            }).then((user) => { res.status(201).json(user) }).catch((error) => {
-                console.error(error);
-                res.status(500).send('Error: ' + error);
-            })
+app.post('/users',
+    // Validation Logic
+
+    check('Username', 'Username is required').isLength({ min: 5 }), // minimum value of 5 characters
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', ' Password is required').not().isEmpty(),
+
+    (req, res) => {
+
+        // check the validation object for errors
+
+        let error = validationResults(req);
+
+        if (!error.isEmpty()) {
+            return res.status(422).json({ errors: array });
         }
-    }).catch((error) => {
-        console.error(error);
-        res.status(500).send('Error: ' + error)
+        let hashedPassword = Users.hashedPassword(req.body.Passsword);
+        Users.findOne({ Username: req.body.Username }).then((user) => {    // Searches to see if user with the requested username alreadt exists
+            if (user) {
+                return res.status(400).send(req.body.Username + 'already exists!');
+            } else {
+                Users.create({
+                    Username: req.body.Username,
+                    Password: hashedPassword,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                }).then((user) => { res.status(201).json(user) }).catch((error) => {
+                    console.error(error);
+                    res.status(500).send('Error: ' + error);
+                })
+            }
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error)
+        });
     });
-});
 
 
-// Get one user by username
+// DELETE: remove user
 
 app.delete('/users/:Username', (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username }).then((user) => {
@@ -248,6 +279,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-app.listen(8081, () => {
-    console.log('Port 8081 is up succesfully')
+const port = process.env.PORT || 8081;
+app.listen(port, '0.0.0.0', () => {
+    console.log('Listening on Port ' + port);
 })
