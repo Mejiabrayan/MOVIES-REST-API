@@ -83,15 +83,15 @@ app.get('/users', (req, res) => {
 // CREATE: add User to the database
 app.post('/users',
     // Validation Logic
-
-    check('Username', 'Username is required').isLength({ min: 5 }), // minimum value of 5 characters
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', ' Password is required').not().isEmpty(),
-
+    [
+        check('Username', 'Username is required').isLength({ min: 5 }), // sets minimum value of 5 characters
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(), // specifies tnat a field can only contain letters and numbers
+        check('Password', ' Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ],
     (req, res) => {
 
         // check the validation object for errors
-
         let error = validationResults(req);
 
         if (!error.isEmpty()) {
@@ -100,7 +100,7 @@ app.post('/users',
         let hashedPassword = Users.hashedPassword(req.body.Passsword);
         Users.findOne({ Username: req.body.Username }).then((user) => {    // Searches to see if user with the requested username alreadt exists
             if (user) {
-                return res.status(400).send(req.body.Username + 'already exists!');
+                return res.status(400).send(req.body.Username + 'already exists!'); // if the user is found, send a response that it already exists
             } else {
                 Users.create({
                     Username: req.body.Username,
