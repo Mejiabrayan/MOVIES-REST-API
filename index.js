@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 // USERS
 
 // GET: returns all users
-app.get('/users', passport, authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.find()
         .then((allUsers) => {
             res.status(201).json(allUsers);
