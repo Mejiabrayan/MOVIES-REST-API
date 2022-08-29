@@ -11,7 +11,6 @@ const { check, validationResult } = require('express-validator');
 
 let allowedOrigins = ['http://localhost:8081', 'http://testsite.com'];
 const cors = require('cors');
-const { authenticate } = require('passport');
 app.use(cors()); // CORS Option 1: Allow all domain
 // app.use(cors({ // CORS Option 2: only allow specific domains
 //     origin: (origin, callback) => {
@@ -78,7 +77,7 @@ app.post('/users',
         check('Username', 'Username is required').isLength({ min: 5 }), // sets minimum value of 5 characters
         check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(), // specifies tnat a field can only contain letters and numbers
         check('Password', ' Password is required').not().isEmpty(),
-        check('Email', 'Email does not appear to be valid').isEmail(),
+        check('Email', 'Email does not appear to be valid').isEmail()
     ],
     (req, res) => {
 
