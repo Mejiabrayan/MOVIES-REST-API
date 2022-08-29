@@ -31,7 +31,7 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI);
 
 
 app.use(bodyParser.json());
@@ -277,7 +277,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 8082;
 app.listen(port, '0.0.0.0', () => {
     console.log('Listening on Port ' + port);
 });
