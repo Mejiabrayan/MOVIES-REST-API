@@ -10,7 +10,7 @@ const Models = require('./models/models');
 const passport = require('passport');
 require('./passport')
 
-const { check, validationResults } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 let allowedOrigins = ['http://localhost:8081', 'http://testsite.com'];
 const cors = require('cors');
@@ -91,10 +91,10 @@ app.post('/users',
     (req, res) => {
 
         // check the validation object for errors
-        let error = validationResults(req);
+        let errors = validationResult(req);
 
-        if (!error.isEmpty()) {
-            return res.status(422).json({ errors: array });
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
         }
         let hashedPassword = Users.hashedPassword(req.body.Passsword);
         Users.findOne({ Username: req.body.Username }).then((user) => {    // Searches to see if user with the requested username alreadt exists
