@@ -12,18 +12,19 @@ require('./passport')
 
 const { check, validationResult } = require('express-validator');
 
-let allowedOrigins = ['http://localhost:8081', 'http://testsite.com'];
+// let allowedOrigins = ['http://localhost:8081', 'http://testsite.com'];
 const cors = require('cors');
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            let message = 'The CORS policy for this application \doesn\'t allow access from origin ' + origin;
-            return callback(new Error(message), false);
-        }
-        return callback(null, true);
-    }
-}));
+app.use(cors());
+// app.use(cors({
+//     origin: (origin, callback) => {
+//         if (!origin) return callback(null, true);
+//         if (allowedOrigins.indexOf(origin) === -1) {
+//             let message = 'The CORS policy for this application \doesn\'t allow access from origin ' + origin;
+//             return callback(new Error(message), false);
+//         }
+//         return callback(null, true);
+//     }
+// }));
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -51,19 +52,17 @@ app.get("/", (req, res) => {
 })
 
 
-
-
-app.get('/movies', passport.authenticate('jwt', { session: false }),
-    (req, res) => {
-        Movies.find().then((movies) => {
+// JWT Authentication
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Movies.find()
+        .then((movies) => {
             res.status(201).json(movies);
-        }).catch((error) => {
+        })
+        .catch((error) => {
             console.error(error);
             res.status(500).send('Error: ' + error);
         });
-    });
-
-
+});
 
 // Users
 
@@ -99,7 +98,7 @@ app.post('/users',
         let hashedPassword = Users.hashedPassword(req.body.Passsword);
         Users.findOne({ Username: req.body.Username }).then((user) => {    // Searches to see if user with the requested username alreadt exists
             if (user) {
-                return res.status(400).send(req.body.Username + 'already exists!'); // if the user is found, send a response that it already exists
+                return res.status(400).send(req.body.Username + ' already exists!'); // if the user is found, send a response that it already exists
             } else {
                 Users.create({
                     Username: req.body.Username,
