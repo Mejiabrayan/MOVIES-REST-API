@@ -12,8 +12,8 @@ const { check, validationResult } = require('express-validator');
 let allowedOrigins = ['http://localhost:8081', 'http://testsite.com'];
 const cors = require('cors');
 const { authenticate } = require('passport');
-app.use(cors());
-// app.use(cors({
+app.use(cors()); // CORS Option 1: Allow all domain
+// app.use(cors({ // CORS Option 2: only allow specific domains
 //     origin: (origin, callback) => {
 //         if (!origin) return callback(null, true);
 //         if (allowedOrigins.indexOf(origin) === -1) {
@@ -291,9 +291,9 @@ app.get('/genres/:Name', (req, res) => {
 
 
 
-app.get('/documentation', (req, res) => {
-    res.sendFile('public/documentation.html', { root: __dirname });
-});
+// app.get('/documentation', (req, res) => {
+//     res.sendFile('public/documentation.html', { root: __dirname });
+// });
 
 
 // Server & Heroku 
