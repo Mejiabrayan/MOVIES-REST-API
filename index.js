@@ -30,8 +30,7 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-mongoose.connect('mongodb://localhost:27017/myMovies').catch(error => handleError(error));
-
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.use(bodyParser.json());
@@ -282,4 +281,4 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 8081;
 app.listen(port, '0.0.0.0', () => {
     console.log('Listening on Port ' + port);
-})
+});
