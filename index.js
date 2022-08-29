@@ -53,7 +53,7 @@ let auth = require('./auth')(app);
 //ROUTING
 //Home
 app.get("/", (req, res) => {
-    res.send('index.html', { root: __dirname });
+    res.send('Hello there! Welcome to myMovies');
 })
 
 
@@ -291,9 +291,9 @@ app.get('/genres/:Name', (req, res) => {
 
 
 
-// app.get('/documentation', (req, res) => {
-//     res.sendFile('public/documentation.html', { root: __dirname });
-// });
+app.get('/documentation', (req, res) => {
+    res.sendFile('public/documentation.html', { root: __dirname });
+});
 
 
 // Server & Heroku 
