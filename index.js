@@ -28,10 +28,9 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-const URI = process.env.CONNECTION_URI;
+// const URI = process.env.CONNECTION_URI;
 // const URI = 'mongodb://localhost:27017/movie-api'; // Database Option 1: Local DB
-mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(bodyParser.json());
 
 //log request to server
@@ -74,6 +73,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
 app.post('/users',
     // Validation Logic
     [
+
         check('Username', 'Username is required').isLength({ min: 5 }), // sets minimum value of 5 characters
         check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(), // specifies tnat a field can only contain letters and numbers
         check('Password', ' Password is required').not().isEmpty(),
@@ -96,10 +96,11 @@ app.post('/users',
                     Password: hashedPassword,
                     Email: req.body.Email,
                     Birthday: req.body.Birthday
-                }).then((user) => { res.status(201).json(user) }).catch((error) => {
-                    console.error(error);
-                    res.status(500).send(`Error: ${error}`);
                 })
+                    .then((user) => { res.status(201).json(user) }).catch((error) => {
+                        console.error(error);
+                        res.status(500).send(`Error: ${error}`);
+                    })
             }
         }).catch((error) => {
             console.error(error);
