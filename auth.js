@@ -1,37 +1,43 @@
-const jwtSecret = 'your_jwt_secret'; // This has to be the same key used in the JWTStrategy
+const jwtSecret = 'your_jwt_secret'; // THIS SHOULD BE IN YOUR CONFIG FILE
+const jwt = require('jsonwebtoken'), // THIS WILL BE USED TO ENCODE AND DECODE JWT TOKENS
+    passport = require('passport'); // THIS WILL BE USED FOR AUTHENTICATION
 
-const jwt = require('jsonwebtoken'),
-    passport = require('passport');
-
-require('./passport'); // Your local passport file
+require('./passport'); // LOCAL STRATEGY
 
 
 let generateJWTToken = (user) => {
     return jwt.sign(user, jwtSecret, {
-        subject: user.Username, // This is the username you’re encoding in the JWT
-        expiresIn: '7d', // This specifies that the token will expire in 7 days
-        algorithm: 'HS256' // This is the algorithm used to “sign” or encode the values of the JWT
+        subject: user.Username, // THIS IS THE USERNAME FIELD IN THE USER MODEL
+        expiresIn: '7d', // THIS EXPIRES IN 7 DAYS
+        algorithm: 'HS256' // THIS IS REQUIRED! 
     });
 }
 
 
-/* POST login. */
+/* POST LOGIN. */
 module.exports = (router) => {
-    router.post('/login', (req, res) => {
-        passport.authenticate('local', { session: false }, (error, user, info) => {
-            if (error || !user) {
-                return res.status(400).json({
-                    message: 'Something is not right',
-                    user: user
-                });
+    // LOGIN ROUTE
+    router.post('/login',
+        (req, res) => {
+            const validatonErrors = validationResult(req);
+
+            if (!validatonErrors.isEmpty()) {
+                return res.status(422).json({ errors: validatonErrors.array() })
             }
-            req.login(user, { session: false }, (error) => {
-                if (error) {
-                    res.send(error);
+            passport.authenticate('local', { session: false }, (error, user, info) => {
+                if (error || !user) {
+                    return res.status(400).json({
+                        message: 'Something is not right',
+                        user: user
+                    });
                 }
-                let token = generateJWTToken(user.toJSON());
-                return res.json({ user, token });
-            });
-        })(req, res);
-    });
+                req.login(user, { session: false }, (error) => {
+                    if (error) {
+                        res.send(error);
+                    }
+                    let token = generateJWTToken(user.toJSON());
+                    return res.json({ user, token });
+                });
+            })(req, res);
+        });
 }
