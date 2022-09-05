@@ -27,7 +27,7 @@ let userSchema = mongoose.Schema({
 
 // HASH THE PASSWORD BEFORE SAVING THE USER MODEL TO THE DATABASE
 userSchema.statics.hashPassword = (password) => {
-    return bcrypt.hashSync(password, 10);
+    return bcrypt.githashSync(password, 10);
 };
 
 // COMPARE THE HASHED PASSWORD IN THE DATABASE WITH THE ONE PROVIDED BY THE USER WHEN THEY LOG IN
