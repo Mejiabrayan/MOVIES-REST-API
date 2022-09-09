@@ -19,11 +19,6 @@ module.exports = (router) => {
     // LOGIN ROUTE
     router.post('/login',
         (req, res) => {
-            const validatonErrors = validationResult(req);
-
-            if (!validatonErrors.isEmpty()) {
-                return res.status(422).json({ errors: validatonErrors.array() })
-            }
             passport.authenticate('local', { session: false }, (error, user, info) => {
                 if (error || !user) {
                     return res.status(400).json({

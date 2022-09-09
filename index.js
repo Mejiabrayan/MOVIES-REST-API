@@ -14,8 +14,8 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-// mongoose.connect('mongodb://localhost:27017/myMovies', { useNewUrlParser: true, useUnifiedTopology: true }); // DATABASE Option 1: Local DB
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, dbName: "myMoviesDB", useUnifiedTopology: true }); // REMOTE DATABASE Option 2: Remote DB
+mongoose.connect('mongodb://localhost:27017/myMovies', { useNewUrlParser: true, useUnifiedTopology: true }); // DATABASE Option 1: Local DB
+// mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, dbName: "myMoviesDB", useUnifiedTopology: true }); // REMOTE DATABASE Option 2: Remote DB
 
 
 // MIDDLEWARE
@@ -194,17 +194,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), us
 // MOVIES
 
 // GET: fetches a list of all movies
-app.get('/movies', (req, res) => {
-    Movies.find()
-        .then((movies) => {
-            res.status(201).json(movies);
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).send(`Error: ${error}`);
-        });
-});
-// app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+// app.get('/movies', (req, res) => {
 //     Movies.find()
 //         .then((movies) => {
 //             res.status(201).json(movies);
@@ -214,6 +204,16 @@ app.get('/movies', (req, res) => {
 //             res.status(500).send(`Error: ${error}`);
 //         });
 // });
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Movies.find()
+        .then((movies) => {
+            res.status(201).json(movies);
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send(`Error: ${error}`);
+        });
+});
 
 // GET: fetches movies by title
 app.get('/movies/:Title', passport.authenticate('jwt', { sesson: false }), (req, res) => {
@@ -307,7 +307,7 @@ app.get('/genres/:Name', (req, res) => {
 
 // DOCUMENTATION ROUTE
 app.get('/documentation', (req, res) => {
-    res.sendFile('public/documentation.html', { root: __dirname });
+    res.sendFile('public/documentation.html');
 });
 
 
