@@ -14,8 +14,8 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
-mongoose.connect('mongodb://localhost:27017/myMovies', { useNewUrlParser: true, useUnifiedTopology: true }); // DATABASE Option 1: Local DB
-// mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, dbName: "myMoviesDB", useUnifiedTopology: true }); // REMOTE DATABASE Option 2: Remote DB
+// mongoose.connect('mongodb://localhost:27017/myMovies', { useNewUrlParser: true, useUnifiedTopology: true }); // DATABASE Option 1: Local DB
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, dbName: "myMoviesDB", useUnifiedTopology: true }); // REMOTE DATABASE Option 2: Remote DB
 
 
 // MIDDLEWARE
