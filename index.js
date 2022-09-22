@@ -224,7 +224,7 @@ app.post('/users/:Username/movies/:MovieID',
         else {
             Users.findOneAndUpdate(
                 { Username: req.params.Username },
-                { $addToSet: { FavoriteMovies: req.params.MovieID } },
+                // { $addToSet: { FavoriteMovies: req.params.MovieID } },
                 { $push: { FavoriteMovies: req.params.MovieID } },
                 { new: true }, // This line ensures that the updated document is returned
                 (err, updated_User) => {
@@ -245,7 +245,7 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
         res.status(403).json('Not allowed to remove movie from another user\'s favorites list');
     } else {
         Users.findOneAndUpdate({ Username: req.params.Username }, {
-            pull: { FavoriteMovies: req.params.MovieID }
+            $pull: { FavoriteMovies: req.params.MovieID }
         },
             { new: true }) // THIS LINE ENSURES THAT THE UPDATED DOCUMENT IS RETURNED
             .then((updatedUser) => {
