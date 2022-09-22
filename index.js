@@ -216,7 +216,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { sesson: false }), (req,
 
 // ADD MOVIE TO FAVORITES LIST OF USER
 app.post('/users/:Username/movies/:MovieID',
-    passport.authenticate({ session: false }),
+    passport.authenticate('jwt', { session: false }),
     (req, res) => {
         if (req.user.Username !== req.params.Username) {
             res.status(403).json('Not allowed to add movie to another user\'s favorites list');
