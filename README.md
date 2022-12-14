@@ -1,12 +1,12 @@
-# myFlix Movie App 🍿
+# myMovies Movie App 🍿
 
 ## Overview
 
-Project built as part of CareerFoundry's Full-Stack-Web-Development-Course to demonstrate the mastery of full-stack JavaScript develpoment with MERN stack.
+The "myMovies" application is a full-stack JavaScript project built as part of CareerFoundry's Full-Stack Web Development Course. It is designed to demonstrate the mastery of MERN stack development.
 
-This README contains technical and content-related details about the server-side and client-side component of a React application called "myMovies". The REST API for "myMovies" is hosted online on Heroku and provides logged in users with access to information about different movies, directors, and genres. For detailed information about all the provided features, see Features sector. The server-side of the application (server, business logic, business layers) consists of a REST API and architected database built using JavaScript, Node.js, Express, and MongoDB.
+The server-side component of the application includes a REST API and a MongoDB database, built using Node.js, Express, and JavaScript. The REST API can be accessed using common HTTP methods (GET, POST, PUT, DELETE) to perform CRUD operations on the database.
 
-The REST API can be accessed via commonly used HTTP methods (GET, POST, PUT, DELETE). CRUD is used to retrieve data from the database and store that data in a non-relational way.
+The client-side component of the application is built using React, providing users with access to information about movies, directors, and genres. More detailed information about the features provided by the application can be found in the "Features" section of this README.
 
 # Server-side
 
