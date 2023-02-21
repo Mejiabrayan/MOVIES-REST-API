@@ -78,7 +78,7 @@ app.use(express.static('public'));
 
 //ROUTING / HOME
 app.get("/", (req, res) => {
-    res.send('Hello there! Welcome to myMovies API!');
+    res.send('Hello, Welcome to myMovies API!');
 })
 
 // LIST OF ALL MOVIES
